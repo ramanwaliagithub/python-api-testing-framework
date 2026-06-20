@@ -1,0 +1,9 @@
+requests==2.32.3
+pytest==8.2.2
+pytest-xdist==3.6.1          # parallel execution / sharding
+pytest-html==4.1.1           # HTML reporting
+pydantic==2.7.4               # request/response schema models + validation
+jsonschema==4.22.0            # contract / JSON schema validation
+python-dotenv==1.0.1          # environment variable management
+tenacity==8.4.1                # retry with exponential backoff
+allure-pytest==2.13.5         # rich reporting, used in CI/CD pipelines
