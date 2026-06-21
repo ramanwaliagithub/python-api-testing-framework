@@ -18,6 +18,8 @@ Contract Test
       v
 Did API return data in the agreed format?
 
+
+
 Architecture
 Backend API
       |
@@ -32,6 +34,28 @@ Contract Validation
       |
       v
 PASS / FAIL
+
+
+How It Fits Into Framework
+
+EnvironmentConfig
+        |
+AuthClient
+        |
+BaseApiClient
+        |
+InvoiceApiClient
+        |
+Response JSON
+        |
+---------------------
+|                   |
+v                   v
+Pydantic       JSON Schema
+Validation     Validation
+        |
+        v
+Contract Tests
 """
 
 import pytest
@@ -40,7 +64,7 @@ from jsonschema import ValidationError, validate
 from src.models.schemas import INVOICE_RESPONSE_SCHEMA
 from src.utils.test_data_factory import build_valid_invoice_payload
 
-
+# Creates a custom test category.
 @pytest.mark.contract
 class TestInvoiceContract:
     """
@@ -56,6 +80,12 @@ class TestInvoiceContract:
         response = invoice_client.create_invoice(payload)
         body = response.json()
 
+        """
+        Example failure:
+        {
+            "message": "Contract violation: 'unit_price' is a required property"
+        }
+        """
         try:
             validate(instance=body, schema=INVOICE_RESPONSE_SCHEMA)
         except ValidationError as exc:
