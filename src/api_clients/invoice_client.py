@@ -8,6 +8,37 @@ in UI automation (sometimes called a "Service Object" or "API Object" in
 API testing).
 """
 
+"""
+InvoiceApiClient is a domain-specific API client
+ (also called a Service Object or API Object).
+
+Architecture:
+Tests
+  |
+  v
+InvoiceApiClient
+  |
+  v
+BaseApiClient
+  |
+  v
+requests.Session
+  |
+  v
+Invoice API
+
+
+Responsibility of each layer
+
+Tests -> Business validation
+
+InvoiceApiClient -> Business operations
+
+BaseApiClient -> HTTP plumbing
+
+requests -> Network communication
+"""
+
 from requests import Response
 
 from src.api_clients.base_client import BaseApiClient

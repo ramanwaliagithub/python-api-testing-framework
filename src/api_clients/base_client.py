@@ -12,6 +12,92 @@ test?" The answer is a thin client layer like this one -- tests call
 high-level methods (`client.get_invoice(id)`), never raw `requests.get`.
 """
 
+
+
+"""
+BaseApiClient is a reusable HTTP client that centralizes all common API 
+communication logic:
+
+Base URL handling
+Authentication headers
+Session management
+Timeouts
+SSL verification
+Logging
+Retry mechanism
+
+Instead of every API client writing:
+requests.get(...)
+requests.post(...)
+they inherit from BaseApiClient and focus only on business actions.
+This follows the DRY (Don't Repeat Yourself) principle and Separation of Concerns, 
+since all HTTP plumbing is in one place.
+class InvoiceApiClient(BaseApiClient):
+
+    def get_invoice(self, invoice_id):
+        return self.get(f"/invoices/{invoice_id}")
+
+Architecture
+                BaseApiClient
+                       |
+        --------------------------------
+        |              |              |
+ InvoiceClient   UserClient     PaymentClient
+
+
+Request Flow
+client.get("/invoices/123")
+        |
+        v
+_request()
+        |
+        v
+Build URL
+        |
+        v
+Log Request
+        |
+        v
+Send HTTP Request
+        |
+        v
+Log Response
+        |
+        v
+Return Response
+
+
+How It Relates to AuthClient
+AuthClient is a domain-specific client that inherits from BaseApiClient. 
+It focuses solely on authentication logic (fetching/caching tokens) and 
+relies on BaseApiClient for all HTTP communication details. This separation 
+allows AuthClient to be clean and focused, while BaseApiClient handles 
+the complexities of making robust API calls.
+
+Together they form a common automation framework pattern.
+                AuthClient
+                     |
+                     |
+             get_token()
+                     |
+                     v
+             access token
+                     |
+                     v
+              BaseApiClient
+                     |
+                     |
+         -------------------------
+         |                       |
+ InvoiceApiClient       UserApiClient
+
+Design Pattern:
+ BaseApiClient
+      ↓
+ InvoiceApiClient
+ UserApiClient
+ PaymentApiClient
+"""
 import logging
 from typing import Any
 

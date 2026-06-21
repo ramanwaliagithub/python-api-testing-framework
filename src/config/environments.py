@@ -15,6 +15,29 @@ into a single dictionary keyed by environment name, and resolve the active
 environment once (via an env var) at runtime. Tests never hardcode a URL.
 """
 
+"""
+Architecture
+Tests
+  |
+  v
+InvoiceApiClient
+  |
+  v
+EnvironmentConfig
+  |
+  v
+ENVIRONMENTS
+  |
+  +---- DEV
+  +---- STAGING
+  +---- PROD
+
+
+Dataclass Automatically creates: __init__()
+__repr__()
+__eq__()
+"""
+
 from dataclasses import dataclass
 
 

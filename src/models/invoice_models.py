@@ -12,6 +12,62 @@ typed model fails loudly if a field is missing, has the wrong type, or
 an enum value the API contract doesn't define.
 """
 
+
+"""
+Architecture
+JSON Request
+      |
+      v
+InvoiceCreateRequest
+      |
+      v
+Invoice API
+      |
+      v
+JSON Response
+      |
+      v
+InvoiceResponse
+      |
+      v
+Validation
+
+
+Components:
+InvoiceStatus: Enum of valid invoice states (PENDING_APPROVAL, APPROVED, REJECTED)
+   |
+   v     
+LineItem: A single line item within an invoice (description, quantity, unit_price)
+   |
+   v  
+InvoiceCreateRequest: Schema for POST /invoices body, with validation (e.g. currency must be uppercase)
+   |
+   v
+InvoiceResponse: Schema for invoice GET/POST responses, matching the API contract
+
+
+Tests
+   |
+   v
+InvoiceApiClient
+   |
+   v
+Response JSON
+   |
+   v
+InvoiceResponse Model
+   |
+   v
+Validation
+
+Main Components:
+InvoiceStatus (Enum)
+LineItem (Nested Model)
+InvoiceCreateRequest
+(Request Validation)
+InvoiceResponse
+(Response Validation)
+"""
 from datetime import datetime
 from enum import Enum
 

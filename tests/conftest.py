@@ -13,6 +13,44 @@ class/module/session) so expensive setup (like auth) happens once per
 session, not once per test.
 """
 
+"""
+Architecture
+                conftest.py
+                       |
+      ----------------------------------
+      |               |               |
+      v               v               v
+ env_config     auth_token     invoice_client
+                                      |
+                                      v
+                              created_invoice_id
+                                      |
+                                      v
+                                   Tests
+
+                                   
+Fixture Dependency Chain
+invoice_client
+    depends on
+        auth_token
+
+auth_token
+    depends on
+        env_config
+
+Graph:
+env_config
+     |
+     v
+auth_token
+     |
+     v
+invoice_client
+     |
+     v
+    test
+"""
+
 import os
 
 import pytest
@@ -57,6 +95,15 @@ def invoice_client(env_config, auth_token) -> InvoiceApiClient:
     return InvoiceApiClient(env_config, auth_token=auth_token)
 
 
+"""
+Fixture Start --> Setup Code --> yield -> Test Runs -> Resume After Yield -> 
+                                                                Teardown Code
+
+
+Framework Flow:
+EnvironmentConfig --> AuthClient --> BaseApiClient --> InvoiceApiClient 
+                            --> Pytest Fixtures --> Tests
+"""
 @pytest.fixture()
 def created_invoice_id(invoice_client):
     """

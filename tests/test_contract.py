@@ -7,6 +7,33 @@ often the right answer when asked "how would you add contract testing
 without a big new tool investment".
 """
 
+"""
+Functional Test
+      |
+      v
+Did API do the right thing?
+
+Contract Test
+      |
+      v
+Did API return data in the agreed format?
+
+Architecture
+Backend API
+      |
+      v
+JSON Response
+      |
+      v
+JSON Schema
+      |
+      v
+Contract Validation
+      |
+      v
+PASS / FAIL
+"""
+
 import pytest
 from jsonschema import ValidationError, validate
 
